@@ -15,6 +15,8 @@ public class ServerWebSocketClient extends WebSocketClient {
     @Getter
     private static ServerWebSocketClient instance;
 
+    private final StringBuilder textBuffer = new StringBuilder();
+
     public ServerWebSocketClient(String wsUrl) {
         super(wsUrl);
         start();
@@ -29,8 +31,15 @@ public class ServerWebSocketClient extends WebSocketClient {
 
     @Override
     protected void onText(String receivedText, boolean last) {
+        textBuffer.append(receivedText);
+
+        if (!last) return;
+
+        String fullMessage = textBuffer.toString();
+        textBuffer.setLength(0);
+
         try {
-            WsPacketWrapper packet = EnderTranslate.getGson().fromJson(receivedText, WsPacketWrapper.class);
+            WsPacketWrapper packet = EnderTranslate.getGson().fromJson(fullMessage, WsPacketWrapper.class);
             packet.getPacket().receiveFromServer(this);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();

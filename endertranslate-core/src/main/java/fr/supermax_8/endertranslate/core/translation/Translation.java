@@ -2,15 +2,11 @@ package fr.supermax_8.endertranslate.core.translation;
 
 import fr.supermax_8.endertranslate.core.EnderTranslateConfig;
 import fr.supermax_8.endertranslate.core.language.LanguageManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Translation {
-
-    private static final LanguageManager languageManager = LanguageManager.getInstance();
 
     private final ArrayList<TranslationValue> translations = new ArrayList<>();
 
@@ -35,7 +31,7 @@ public class Translation {
     }
 
     public TranslationValue getTranslationValue(String language) {
-        int index = languageManager.languageIndex(language);
+        int index = LanguageManager.getInstance().languageIndex(language);
         return index >= translations.size() ? translations.get(0) : translations.get(index);
     }
 
